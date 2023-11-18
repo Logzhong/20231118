@@ -1,0 +1,24 @@
+#VSCode juypter notebook, 内核：Python 3.8.8
+import pandas as pd
+import numpy as np
+import os
+
+df_out = pd.DataFrame()
+title=['Measure','max_C4','base_C4','area_C4','min_C4','TBD1_C4','TBD2_C4','TBD3_C4','TBD4_C4'] ###改###文件测量项目名称
+
+#读取路径下文件名称
+filepath='D:\\处理数据文件夹\\data\\Efficiency\\20231107-TA1' ###改###文件所在文件夹路径
+outpath = 'D:\\处理数据文件夹\\data\\Interest\\'  ###改###输出文件路径
+filename=sorted(os.listdir(filepath),key=lambda x: os.path.getmtime(os.path.join(filepath,x))) #文件按时间排序
+
+for i in filename:
+    df = pd.read_table(os.path.join(filepath,i),nrows=2,sep=' ',encoding='gbk')
+    df = df.iloc[:,0:9]
+    df.columns = title
+    df = df.loc[1:1]  #保留value行
+    df['filename'] = i
+    df_out = pd.concat([df_out,df])
+    print('{}-{:.1%}'.format(i,filename.index(i)/len(filename)))
+
+df_out.to_csv(outpath+'输出文件名称'+'.csv',index=False)
+
